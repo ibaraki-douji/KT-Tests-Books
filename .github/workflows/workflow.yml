@@ -31,4 +31,3 @@ jobs:
         with:
           files: |
             build/test-results/**/*.xml
-            build/reports/tests/test/index.html
