@@ -24,3 +24,11 @@ jobs:
 
       - name: Run Tests
         run: ./gradlew test
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action/linux@v2
+        if: (!cancelled())
+        with:
+          files: |
+            build/test-results/**/*.xml
+            build/reports/tests/test/index.html
