@@ -3,6 +3,7 @@ plugins {
 	kotlin("plugin.spring") version "1.9.25"
 	id("org.springframework.boot") version "3.5.3"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("info.solidsoft.pitest") version "1.19.0-rc.1"
 	jacoco
 }
 
@@ -29,6 +30,8 @@ dependencies {
 	testImplementation("io.kotest:kotest-assertions-core:5.9.1")
 	testImplementation("io.kotest:kotest-property:5.9.1")
 	testImplementation("io.mockk:mockk:1.14.4")
+	// PiTest JUnit 5 plugin
+	pitest("org.pitest:pitest-junit5-plugin:1.2.1")
 }
 
 kotlin {
@@ -53,4 +56,13 @@ tasks.jacocoTestReport {
 }
 jacoco {
 	toolVersion = "0.8.13"
+}
+
+pitest {
+	threads = 4
+	outputFormats = setOf("XML", "HTML")
+	timestampedReports = false
+	targetClasses = setOf("fr.ibaraki.books.*")
+	targetTests = setOf("fr.ibaraki.books.*")
+	excludedClasses = setOf("fr.ibaraki.books.BooksApplication*")
 }
