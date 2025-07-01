@@ -7,10 +7,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Service
 
 @Service
-class BookService {
-
-    @Autowired
-    private lateinit var bookRepository: IBookRepository
+class BookService(private val bookRepository: IBookRepository) {
 
     fun createBook(title: String, author: String): Book {
         if (title.isEmpty() || author.isEmpty()) {

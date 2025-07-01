@@ -16,8 +16,8 @@ class BookConfiguration {
     }
 
     @Bean
-    fun bookService(): BookService? {
-        return BookService()
+    fun bookService(bookRepository: IBookRepository): BookService? {
+        return BookService(bookRepository)
     }
 
 }

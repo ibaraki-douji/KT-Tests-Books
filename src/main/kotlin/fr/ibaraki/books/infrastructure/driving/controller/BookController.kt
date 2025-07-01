@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/books")
-class BookController {
-
-    @Autowired
-    private lateinit var bookService: BookService
+class BookController(val bookService: BookService) {
 
     @GetMapping("")
     fun getBooks(): List<Book> {
