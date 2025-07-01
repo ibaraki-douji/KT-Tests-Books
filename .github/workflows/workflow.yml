@@ -54,6 +54,8 @@ jobs:
 
       - name: Add Jacocoo report to workflow run summary
         run: |
+           echo "" >> $GITHUB_STEP_SUMMARY
+           echo "## JaCoCo Code Coverage Report" >> $GITHUB_STEP_SUMMARY
            echo "| Outcome | Value |" >> $GITHUB_STEP_SUMMARY
            echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
            echo "| Code Coverage % | ${{ steps.jacoco_reporter.outputs.coverage_percentage }} |" >> $GITHUB_STEP_SUMMARY
