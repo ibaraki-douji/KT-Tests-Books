@@ -2,10 +2,11 @@ package fr.ibaraki.books.domain.model
 
 class Book : Comparable<Book> {
 
+    private var id: Long = 0L
     private var title: String = ""
     private var author: String = ""
 
-    constructor(title: String, author: String) {
+    constructor(id: Long, title: String, author: String) {
         if (title.isEmpty()) {
             throw IllegalArgumentException("Title cannot be empty")
         }
@@ -14,8 +15,22 @@ class Book : Comparable<Book> {
             throw IllegalArgumentException("Author cannot be empty")
         }
 
+        this.id = id
         this.title = title
         this.author = author
+    }
+
+    constructor(title: String, author: String) : this(0L, title, author)
+
+    fun getId(): Long {
+        return id
+    }
+
+    fun setId(id: Long) {
+        if (id < 0) {
+            throw IllegalArgumentException("ID cannot be negative")
+        }
+        this.id = id
     }
 
     fun getTitle(): String {

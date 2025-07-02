@@ -31,6 +31,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.liquibase:liquibase-core")
+	implementation("org.springframework.boot:spring-boot-starter-jdbc")
+	implementation("org.postgresql:postgresql")
 
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
@@ -47,6 +50,11 @@ dependencies {
 	testIntegrationImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(module = "mockito-core")
 	}
+	testIntegrationImplementation("org.testcontainers:postgresql:1.19.1")
+	testIntegrationImplementation("org.testcontainers:jdbc-test:1.12.0")
+	testIntegrationImplementation("org.testcontainers:testcontainers:1.19.1")
+	testIntegrationImplementation("io.kotest.extensions:kotest-extensions-testcontainers:2.0.2")
+
 
 }
 

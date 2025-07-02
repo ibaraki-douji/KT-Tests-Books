@@ -8,5 +8,6 @@ interface IBookRepository {
 
     fun listBooks(): List<Book>;
     fun save(book: Book);
+    fun clear();
 
 }
