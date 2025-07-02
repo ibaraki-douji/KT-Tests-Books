@@ -14,56 +14,60 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 
-class BookServiceTests : FunSpec({
+class BookServiceTests : FunSpec() {
 
     val mockRepository = mockk<IBookRepository>(relaxed = true)
     val bookService = BookService(mockRepository)
 
-    val bookListArb = Arb.list(
-        Arb.bind(
-            Arb.string(minSize = 1, maxSize = 50), // Title
-            Arb.string(minSize = 1, maxSize = 50)  // Author
-        ) { title, author -> Book(title, author) },
-        1..50
-    )
+    init {
 
-    test("should add a book successfully") {
-        val book = Book("Title", "Author")
-        every { mockRepository.save(book) } returns Unit
+            val bookListArb = Arb.list(
+                Arb.bind(
+                    Arb.string(minSize = 1, maxSize = 50), // Title
+                    Arb.string(minSize = 1, maxSize = 50)  // Author
+                ) { title, author -> Book(title, author) },
+                1..50
+            )
 
-        val result = bookService.createBook("Title", "Author")
+            test("should add a book successfully") {
+                val book = Book("Title", "Author")
+                every { mockRepository.save(book) } returns Unit
 
-        result.getTitle() shouldBe "Title"
-        result.getAuthor() shouldBe "Author"
-        verify { mockRepository.save(book) }
-    }
+                val result = bookService.createBook("Title", "Author")
 
-    test("should throw exception if title or author is empty") {
-        shouldThrow<IllegalArgumentException> { bookService.createBook("", "Author") }
-        shouldThrow<IllegalArgumentException> { bookService.createBook("Title", "") }
-    }
+                result.getTitle() shouldBe "Title"
+                result.getAuthor() shouldBe "Author"
+                verify { mockRepository.save(book) }
+            }
 
-    test("should list all books in alphabetical order by title") {
-        val books = listOf(
-            Book("Zebra", "Author1"),
-            Book("Apple", "Author2"),
-            Book("Monkey", "Author3")
-        )
-        every { mockRepository.listBooks() } returns books
+            test("should throw exception if title or author is empty") {
+                shouldThrow<IllegalArgumentException> { bookService.createBook("", "Author") }
+                shouldThrow<IllegalArgumentException> { bookService.createBook("Title", "") }
+            }
 
-        val result = bookService.listBooks()
+            test("should list all books in alphabetical order by title") {
+                val books = listOf(
+                    Book("Zebra", "Author1"),
+                    Book("Apple", "Author2"),
+                    Book("Monkey", "Author3")
+                )
+                every { mockRepository.listBooks() } returns books
 
-        result shouldBe books.sortedBy { it.getTitle() }
-    }
+                val result = bookService.listBooks()
 
-    test("should return all books when listing") {
-        checkAll (bookListArb) { books ->
-            every { mockRepository.listBooks() } returns books
+                result shouldBe books.sortedBy { it.getTitle() }
+            }
 
-            val result = bookService.listBooks()
+            test("should return all books when listing") {
+                checkAll (bookListArb) { books ->
+                    every { mockRepository.listBooks() } returns books
 
-            result.size shouldBe books.size
+                    val result = bookService.listBooks()
+
+                    result.size shouldBe books.size
+                }
+            }
+
         }
-    }
 
-}) {}
+}

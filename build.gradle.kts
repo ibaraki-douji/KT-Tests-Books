@@ -31,6 +31,10 @@ val testComponentImplementation: Configuration by configurations.creating {
 	extendsFrom(configurations.implementation.get(), configurations.testImplementation.get())
 }
 
+val testArchitectureImplementation: Configuration by configurations.creating {
+	extendsFrom(configurations.implementation.get(), configurations.testImplementation.get())
+}
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -68,6 +72,9 @@ dependencies {
 	testComponentImplementation("org.testcontainers:postgresql:1.19.1")
 	testComponentImplementation("io.kotest:kotest-assertions-core:5.9.1")
 
+	testArchitectureImplementation("com.tngtech.archunit:archunit-junit5:1.3.0")
+	testArchitectureImplementation("io.kotest:kotest-assertions-core:5.9.1")
+	testArchitectureImplementation("io.kotest:kotest-runner-junit5:5.9.1")
 }
 
 
@@ -104,11 +111,27 @@ testing {
 			}
 
 		}
+
+		val testArchitecture by registering(JvmTestSuite::class) {
+
+			sources {
+				kotlin {
+					setSrcDirs(listOf("src/testArchitecture/kotlin"))
+				}
+				resources {
+					setSrcDirs(listOf("src/testArchitecture/resources"))
+				}
+
+				compileClasspath += sourceSets.main.get().output
+				runtimeClasspath += sourceSets.main.get().output
+			}
+
+		}
 	}
 }
 
 tasks.register("testAll") {
-	dependsOn("test", "testIntegration", "testComponent")
+	dependsOn("test", "testIntegration", "testComponent", "testArchitecture")
 	group = "verification"
 	description = "Run all tests (unit and integration)"
 }
@@ -123,20 +146,13 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
-tasks.test {
-	finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
-}
-
-tasks.named("testIntegration") {
-	finalizedBy(tasks.jacocoTestReport)
-}
-
-tasks.named("testComponent") {
-	finalizedBy(tasks.jacocoTestReport)
-}
-
 tasks.jacocoTestReport {
-	dependsOn(tasks.test, tasks.named("testIntegration"), tasks.named("testComponent"))
+	dependsOn(
+		tasks.test,
+		tasks.named("testIntegration"),
+		tasks.named("testComponent"),
+		tasks.named("testArchitecture")
+	)
 	reports {
 		xml.required = true
 		csv.required = false
