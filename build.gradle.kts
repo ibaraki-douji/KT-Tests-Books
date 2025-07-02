@@ -1,8 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-import org.gradle.internal.fingerprint.classpath.impl.ClasspathFingerprintingStrategy.compileClasspath
-import org.gradle.kotlin.dsl.compileClasspath
-
 
 plugins {
 	kotlin("jvm") version "1.9.25"
@@ -74,6 +71,11 @@ testing {
 	}
 }
 
+tasks.register("testAll") {
+	dependsOn("test", "testIntegration")
+	group = "verification"
+	description = "Run all tests (unit and integration)"
+}
 
 kotlin {
 	compilerOptions {
@@ -88,8 +90,14 @@ tasks.withType<Test> {
 tasks.test {
 	finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }
+
+// Configure testIntegration task
+tasks.named("testIntegration") {
+	finalizedBy(tasks.jacocoTestReport)
+}
+
 tasks.jacocoTestReport {
-	dependsOn(tasks.test) // tests are required to run before generating the report
+	dependsOn(tasks.test, tasks.named("testIntegration"))
 	reports {
 		xml.required = true
 		csv.required = false

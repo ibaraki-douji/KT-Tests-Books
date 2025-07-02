@@ -33,7 +33,19 @@ jobs:
         if: (!cancelled())
         with:
           files: |
-            build/test-results/**/*.xml
+            build/test-results/test/*.xml
+          comment_mode: off
+
+      - name: Run Integration Tests
+        run: ./gradlew testIntegration
+
+      - name: Publish Integration Test Results
+        uses: EnricoMi/publish-unit-test-result-action/linux@v2
+        if: (!cancelled())
+        with:
+          check_name: Integration Tests Results
+          files: |
+            build/test-results/testIntegration/*.xml
           comment_mode: off
 
       - name: Run Coverage Report
