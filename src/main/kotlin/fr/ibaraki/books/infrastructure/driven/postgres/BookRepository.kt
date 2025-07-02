@@ -16,8 +16,8 @@ class BookRepository(val sql: NamedParameterJdbcTemplate) : IBookRepository {
     }
 
     override fun save(book: Book) {
-        if (book.getTitle().isEmpty() || book.getAuthor().isEmpty()) {
-            throw IllegalArgumentException("Title and author must not be empty")
+        require(book.getTitle().isNotEmpty() && book.getAuthor().isNotEmpty()) {
+            "Title and author must not be empty"
         }
         sql.update(
             "INSERT INTO books (title, author) VALUES (:title, :author)",

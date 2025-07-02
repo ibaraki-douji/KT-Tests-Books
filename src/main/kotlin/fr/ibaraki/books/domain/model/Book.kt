@@ -7,13 +7,9 @@ class Book : Comparable<Book> {
     private var author: String = ""
 
     constructor(id: Long, title: String, author: String) {
-        if (title.isEmpty()) {
-            throw IllegalArgumentException("Title cannot be empty")
-        }
+        require(title.isNotEmpty()) { "title cannot be empty" }
+        require(author.isNotEmpty()) { "author cannot be empty" }
 
-        if (author.isEmpty()) {
-            throw IllegalArgumentException("Author cannot be empty")
-        }
 
         this.id = id
         this.title = title
@@ -27,9 +23,7 @@ class Book : Comparable<Book> {
     }
 
     fun setId(id: Long) {
-        if (id < 0) {
-            throw IllegalArgumentException("ID cannot be negative")
-        }
+        require(id >= 0) { "ID cannot be negative" }
         this.id = id
     }
 
@@ -38,9 +32,7 @@ class Book : Comparable<Book> {
     }
 
     fun setTitle(title: String) {
-        if (title.isEmpty()) {
-            throw IllegalArgumentException("Title cannot be empty")
-        }
+        require(title.isNotEmpty()) { "Title cannot be empty" }
         this.title = title
     }
 
@@ -49,9 +41,7 @@ class Book : Comparable<Book> {
     }
 
     fun setAuthor(author: String) {
-        if (author.isEmpty()) {
-            throw IllegalArgumentException("Author cannot be empty")
-        }
+        require(author.isNotEmpty()) { "Author cannot be empty" }
         this.author = author
     }
 
@@ -65,5 +55,11 @@ class Book : Comparable<Book> {
 
     override fun toString(): String {
         return "Book(title='$title', author='$author')"
+    }
+
+    override fun hashCode(): Int {
+        var result = title.hashCode()
+        result = 31 * result + author.hashCode()
+        return result
     }
 }

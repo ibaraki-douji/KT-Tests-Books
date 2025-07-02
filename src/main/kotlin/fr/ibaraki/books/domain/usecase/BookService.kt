@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service
 class BookService(private val bookRepository: IBookRepository) {
 
     fun createBook(title: String, author: String): Book {
-        if (title.isEmpty() || author.isEmpty()) {
-            throw IllegalArgumentException("Title and author must not be empty")
+        require(title.isNotEmpty() && author.isNotEmpty()) {
+            "Title and author must not be empty"
         }
 
         val book = Book(title, author)

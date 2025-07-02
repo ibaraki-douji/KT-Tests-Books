@@ -1,12 +1,16 @@
 @file:Suppress("UnstableApiUsage")
 
+import io.gitlab.arturbosch.detekt.Detekt
+import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
+
 
 plugins {
-	kotlin("jvm") version "1.9.25"
-	kotlin("plugin.spring") version "1.9.25"
+	kotlin("jvm") version "1.9.23"
+	kotlin("plugin.spring") version "1.9.23"
 	id("org.springframework.boot") version "3.5.3"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("info.solidsoft.pitest") version "1.19.0-rc.1"
+	id("io.gitlab.arturbosch.detekt") version "1.23.6"
 	jacoco
 }
 
@@ -169,4 +173,24 @@ pitest {
 	targetClasses = setOf("fr.ibaraki.books.*")
 	targetTests = setOf("fr.ibaraki.books.*")
 	excludedClasses = setOf("fr.ibaraki.books.BooksApplication*")
+}
+
+detekt {
+	buildUponDefaultConfig = true
+	allRules = false
+	config.setFrom("$projectDir/detekt.yml")
+}
+
+tasks.withType<Detekt>().configureEach {
+	reports {
+		html.required.set(true)
+		xml.required.set(true)
+	}
+}
+
+tasks.withType<Detekt>().configureEach {
+	jvmTarget = "21"
+}
+tasks.withType<DetektCreateBaselineTask>().configureEach {
+	jvmTarget = "21"
 }

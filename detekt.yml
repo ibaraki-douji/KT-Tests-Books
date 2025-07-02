@@ -1,0 +1,3 @@
+performance:
+  SpreadOperator:
+    excludes: ['**/test/**', '**/test*/**', '**/main/**/BooksApplication.kt']
