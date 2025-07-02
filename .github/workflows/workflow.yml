@@ -48,6 +48,18 @@ jobs:
             build/test-results/testIntegration/*.xml
           comment_mode: off
 
+      - name: Run Component Tests
+        run: ./gradlew testComponent
+
+      - name: Publish Component Test Results
+        uses: EnricoMi/publish-unit-test-result-action/linux@v2
+        if: (!cancelled())
+        with:
+          check_name: Component Tests Results
+          files: |
+            build/test-results/testComponent/*.xml
+          comment_mode: off
+
       - name: Run Coverage Report
         run: ./gradlew jacocoTestReport
 

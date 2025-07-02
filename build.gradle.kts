@@ -27,6 +27,10 @@ val testIntegrationImplementation: Configuration by configurations.creating {
 	extendsFrom(configurations.implementation.get(), configurations.testImplementation.get())
 }
 
+val testComponentImplementation: Configuration by configurations.creating {
+	extendsFrom(configurations.implementation.get(), configurations.testImplementation.get())
+}
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -55,6 +59,14 @@ dependencies {
 	testIntegrationImplementation("org.testcontainers:testcontainers:1.19.1")
 	testIntegrationImplementation("io.kotest.extensions:kotest-extensions-testcontainers:2.0.2")
 
+	testComponentImplementation("io.cucumber:cucumber-java:7.14.0")
+	testComponentImplementation("io.cucumber:cucumber-spring:7.14.0")
+	testComponentImplementation("io.cucumber:cucumber-junit:7.14.0")
+	testComponentImplementation("io.cucumber:cucumber-junit-platform-engine:7.14.0")
+	testComponentImplementation("io.rest-assured:rest-assured:5.3.2")
+	testComponentImplementation("org.junit.platform:junit-platform-suite:1.10.0")
+	testComponentImplementation("org.testcontainers:postgresql:1.19.1")
+	testComponentImplementation("io.kotest:kotest-assertions-core:5.9.1")
 
 }
 
@@ -76,11 +88,27 @@ testing {
 			}
 
 		}
+
+		val testComponent by registering(JvmTestSuite::class) {
+
+			sources {
+				kotlin {
+					setSrcDirs(listOf("src/testComponent/kotlin"))
+				}
+				resources {
+					setSrcDirs(listOf("src/testComponent/resources"))
+				}
+
+				compileClasspath += sourceSets.main.get().output
+				runtimeClasspath += sourceSets.main.get().output
+			}
+
+		}
 	}
 }
 
 tasks.register("testAll") {
-	dependsOn("test", "testIntegration")
+	dependsOn("test", "testIntegration", "testComponent")
 	group = "verification"
 	description = "Run all tests (unit and integration)"
 }
@@ -99,13 +127,16 @@ tasks.test {
 	finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }
 
-// Configure testIntegration task
 tasks.named("testIntegration") {
 	finalizedBy(tasks.jacocoTestReport)
 }
 
+tasks.named("testComponent") {
+	finalizedBy(tasks.jacocoTestReport)
+}
+
 tasks.jacocoTestReport {
-	dependsOn(tasks.test, tasks.named("testIntegration"))
+	dependsOn(tasks.test, tasks.named("testIntegration"), tasks.named("testComponent"))
 	reports {
 		xml.required = true
 		csv.required = false
