@@ -32,6 +32,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action/linux@v2
         if: (!cancelled())
         with:
+          check_name: Unit Tests Results
           files: |
             build/test-results/test/*.xml
           comment_mode: off
@@ -70,6 +71,15 @@ jobs:
           check_name: Architecture Tests Results
           files: |
             build/test-results/testArchitecture/*.xml
+          comment_mode: off
+
+      - name: Publish All Tests Results
+        uses: EnricoMi/publish-unit-test-result-action/linux@v2
+        if: (!cancelled())
+        with:
+          check_name: All Tests Results
+          files: |
+            build/test-results/**/*.xml
           comment_mode: off
 
       - name: Run Coverage Report
