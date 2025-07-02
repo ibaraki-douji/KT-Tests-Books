@@ -17,6 +17,10 @@ plugins {
 group = "fr.ibaraki"
 version = "0.0.1-SNAPSHOT"
 
+springBoot {
+	mainClass.set("fr.ibaraki.books.BooksApplication")
+}
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)

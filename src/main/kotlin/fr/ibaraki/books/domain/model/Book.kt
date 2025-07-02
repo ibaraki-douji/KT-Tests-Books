@@ -7,8 +7,8 @@ class Book : Comparable<Book> {
     private var author: String = ""
 
     constructor(id: Long, title: String, author: String) {
-        require(title.isNotEmpty()) { "title cannot be empty" }
-        require(author.isNotEmpty()) { "author cannot be empty" }
+        require(title.isNotEmpty()) { "Title cannot be empty" }
+        require(author.isNotEmpty()) { "Author cannot be empty" }
 
 
         this.id = id
