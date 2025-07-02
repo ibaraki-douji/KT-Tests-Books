@@ -126,9 +126,10 @@ jobs:
 
       - name: Run Detekt Linting
         run: ./gradlew detekt
-          
-      - name: Publish Detekt Report
-        uses: actions/upload-artifact@v4
+
+      - name: install for canvas
+        run: sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+
+      - uses: MeilCli/android-lint-statistics@v2
         with:
-          name: detekt-report
-          path: build/reports/detekt/detekt.xml
+          lint_xml_file_path: 'reports/detekt/**/**.xml'
