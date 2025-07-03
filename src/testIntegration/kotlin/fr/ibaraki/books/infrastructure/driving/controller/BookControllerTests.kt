@@ -40,8 +40,10 @@ class BookControllerTests : FunSpec() {
                 status { isOk() }
                 jsonPath("$[0].title") { value("Clean Code") }
                 jsonPath("$[0].author") { value("Robert Martin") }
+                jsonPath("$[0].reserved") { value(false) }
                 jsonPath("$[1].title") { value("Kotlin in Action") }
                 jsonPath("$[1].author") { value("Dmitry Jemerov") }
+                jsonPath("$[1].reserved") { value(false) }
 
                 jsonPath("$") { isArray() }
             }.andReturn()

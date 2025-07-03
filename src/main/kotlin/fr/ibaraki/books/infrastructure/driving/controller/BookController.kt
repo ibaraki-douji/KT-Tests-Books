@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -32,6 +33,23 @@ class BookController(val bookService: BookService) {
         bookService.createBook(dto.title, dto.author)
 
         return ResponseEntity(HttpStatus.CREATED)
+    }
+
+    @PostMapping("/{id}/reserve")
+    fun reserveBook(@PathVariable id: Long): ResponseEntity<Book> {
+        if (id <= 0) {
+            return ResponseEntity(HttpStatus.BAD_REQUEST)
+        }
+
+        try {
+            val book = bookService.reserveBook(id)
+            if (book == null) {
+                return ResponseEntity(HttpStatus.NOT_FOUND)
+            }
+            return ResponseEntity(book, HttpStatus.OK)
+        } catch (e: IllegalStateException) {
+            return ResponseEntity(HttpStatus.BAD_REQUEST)
+        }
     }
 
 }

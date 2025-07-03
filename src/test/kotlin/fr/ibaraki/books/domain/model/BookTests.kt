@@ -16,6 +16,7 @@ class BookTests : FunSpec() {
             book.setAuthor("Orwell")
             book.getTitle() shouldBe "Animal Farm"
             book.getAuthor() shouldBe "Orwell"
+            book.isReserved() shouldBe false
         }
 
         test("Books should be comparable by their string representation") {
@@ -56,6 +57,11 @@ class BookTests : FunSpec() {
                 book.setAuthor("")
             }
             exception.message shouldBe "Author cannot be empty"
+        }
+
+        test("should create a book with a reserved status") {
+            val book = Book("1984", "George Orwell", true)
+            book.isReserved() shouldBe true
         }
     }
 }

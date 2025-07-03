@@ -148,6 +148,47 @@ class BookRepositoryTests : FunSpec() {
             bookRepository.listBooks().shouldBeEmpty()
         }
 
+        test("Should reserve a book") {
+            // Given
+            val book = bookRepository.listBooks().firstOrNull() ?: throw Exception("No books available to reserve")
+            val bookId = book.getId()
+
+            // When
+            val reservedBook = bookRepository.reserveBook(bookId)
+
+            // Then
+            reservedBook shouldNotBe null
+            reservedBook?.isReserved() shouldBe true
+            reservedBook?.getId() shouldBe bookId
+        }
+
+        test("should not reserve a non-existing book") {
+            // Given
+            val nonExistingBookId = 999L // Assuming this ID does not exist
+
+            // When
+            val reservedBook = bookRepository.reserveBook(nonExistingBookId)
+            val books = bookRepository.listBooks()
+
+            // Then
+            reservedBook shouldBe null
+            books shouldHaveSize 2
+            books.forEach { it.isReserved() shouldBe false }
+        }
+
+        test("should not reserve an already reserved book") {
+            // Given
+            val book = bookRepository.listBooks().firstOrNull() ?: throw Exception("No books available to reserve")
+            val bookId = book.getId()
+            bookRepository.reserveBook(bookId) // Reserve it first
+
+            // When
+            val reservedBook = bookRepository.reserveBook(bookId)
+
+            // Then
+            reservedBook shouldBe null
+        }
+
         afterTest {
             bookRepository.clear()
         }

@@ -8,6 +8,14 @@
             http://www.liquibase.org/xml/ns/dbchangelog-ext
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd"
 >
-    <include file="/db/changelogs/changelog.xml"/>
-    <include file="/db/changelogs/20250701143850_change.xml"/>
+    <changeSet id="20250701143850" author="ibaraki">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="books"/>
+        </preConditions>
+        <addColumn tableName="books">
+            <column name="reserved" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

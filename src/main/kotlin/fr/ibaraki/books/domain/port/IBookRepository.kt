@@ -9,5 +9,6 @@ interface IBookRepository {
     fun listBooks(): List<Book>;
     fun save(book: Book);
     fun clear();
+    fun reserveBook(bookId: Long): Book?;
 
 }

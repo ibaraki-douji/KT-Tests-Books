@@ -60,6 +60,23 @@ class BookStepDefs {
             .response()
     }
 
+    @When("the user reserves the book {string}")
+    @Throws(Exception::class)
+    fun reserveBook(title: String) {
+        this.getAllDatas()
+
+        val bookId = response.jsonPath().getLong("find { it.title == '$title' }.id")
+
+        response = given()
+            .contentType(ContentType.JSON)
+            .`when`()
+            .post("/books/" + bookId + "/reserve")
+            .then()
+            .statusCode(200)
+            .extract()
+            .response()
+    }
+
     @Then("the list of books should contain")
     @Throws(Exception::class)
     fun verifyBooks(dataTable: DataTable) {
@@ -72,6 +89,14 @@ class BookStepDefs {
             response.then()
                 .body("find { it.title == '$title' }.author", equalTo(author))
         }
+    }
+
+    @Then("the book {string} should be reserved")
+    @Throws(Exception::class)
+    fun verifyBookReserved(title: String) {
+        response.then()
+            .body("title", equalTo(title))
+            .body("reserved", equalTo(true))
     }
 
 }

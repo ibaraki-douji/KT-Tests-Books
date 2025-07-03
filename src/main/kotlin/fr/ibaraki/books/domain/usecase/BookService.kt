@@ -24,4 +24,14 @@ class BookService(private val bookRepository: IBookRepository) {
             .sortedBy { e -> e.getTitle() }
     }
 
+    fun reserveBook(bookId: Long): Book? {
+        val book = bookRepository.listBooks().find { it.getId() == bookId }
+
+        check(book !== null && !book.isReserved()) {
+            "Book is already reserved or does not exist"
+        }
+
+        return bookRepository.reserveBook(bookId)
+    }
+
 }
